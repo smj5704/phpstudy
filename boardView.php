@@ -23,7 +23,7 @@
             }
 
             tr, th, td{
-                border:1px solid darkgray;
+                
                 height: 50px;
                 font-size: 20px;
             }
@@ -33,6 +33,16 @@
              text-decoration: none;
              color : black;
           }
+          .reply_view {
+            width: 800px;
+           text-align: center;
+            border-top: none; 
+            border-bottom: none; 
+            border-left: none; 
+            border-right: none; 
+
+
+
         </style>
     </head>
 
@@ -83,7 +93,7 @@
             <!-- 목록, 수정, 삭제 -->
             <div >
                 
-                    <a href="./boardList.php">[ Go List ] &nbsp;&nbsp;&nbsp;</a></li>
+                    <a href="./boardList.php">[ Go List ] &nbsp;&nbsp;&nbsp;</a>
                     <a href="./boardModify.php?idx=<?php echo $board['id']; ?>">[ Edit ] &nbsp;&nbsp;&nbsp;</a>
                     <a href="boardDelete.php?idx=<?php echo $board['id']; ?>">[ Delete ]</a>
                 
@@ -91,7 +101,7 @@
         </div>
 
         <!--댓글 불러오기 -->
-        <div>
+        <div >
             <h3>댓글 목록</h3>
             <?php
                 $sql3 = "select * from reply where board_no='".$bno."' order by id desc";
@@ -99,23 +109,35 @@
                 for($j=0; $row=mysqli_fetch_assoc($result);$j++):
             ?>
 
-            <table>
+            <table class = "reply_view">
                 <tr>
-                    <th>
+                    <th width = "50px">
                         <?php echo $row['id'];?>
                     </th>
-                    <td>
-                        <?php echo $row['content']; ?>
-                    </td>
-                    <td>
+                    
+                    <td widtj = "120">
                     <?php echo $row['date']; ?>
                     </td>
+                    <td>
+                        <div width = "500"></div>
+                    </td>
                 </tr>
-            </table>
+                <tr>
+                    <td colspan = "2" >
+                        <?php echo $row['content']; ?>
+                    </td>
+                </tr>
                 
-                  <?php
+                <?php
                endfor;
                ?>
+            </table>
+            <div style = "text-align: left; padding-left : 1000px;">
+                    
+                    <a href="#"> [ 답글 ] </a>
+                
+            </div>
+            
                
          
 
