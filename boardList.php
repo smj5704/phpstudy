@@ -43,12 +43,18 @@
                 color : black;
              }
              ul li {
-                 float  : left;
-                 margin-left : 10px;
-
+               
+                padding : 10px;
+                 
+                text-align: right;
                  list-style: none;
-             }
+             } 
 
+
+             .writeCount ul li a:hover {
+                     color:blue;
+                     font-size: 20px;
+             }
 
         </style>
 
@@ -195,7 +201,7 @@
                      
                       echo "<a href='?page=1'>[ 처음으로 가기 ]$nbsp$nbsp$nbsp</a>";
                       
-                      echo "<a href='?page=$pre'>[ prev ]$nbsp$nbsp$nbsp </a>";
+                      echo "<a href='?page=$pre'>[ ◀ ]$nbsp$nbsp$nbsp </a>";
                        //이전글자에 pre변수를 링크한다. 이러면 이전버튼을 누를때마다 현재 페이지에서 -1하게 된다.
                     }
                     //페이지 번호 출력
@@ -203,7 +209,7 @@
                     $endPage = $startPage+9;
                         for($i=$startPage;$i<=$endPage; $i++) {
                             if($page==$i) $col="red"; //현재페이지 색깔 표시
-                            else $col= "#cccccc";
+                            else $col= "darkgray";
 
                             if($i>$totalPage) {break;} //페이지 더 없으면 넘어가기
                             print " <a href='./boardList.php?page=$i&block=$block'>
@@ -215,8 +221,11 @@
                     if($block >= $totalBlock){ //만약 현재 블록이 블록 총개수보다 크거나 같다면 빈 값
                     }else{
                       $next = $page + 1; //next변수에 page + 1을 해준다.
-                      echo "<a href='?page=$next'>[ next ]</a>"; //다음글자에 next변수를 링크한다. 현재 4페이지에 있다면 +1하여 5페이지로 이동하게 된다.
+                      echo "<a href='?page=$next'>[ ▶ ]</a>$nbsp$nbsp$nbsp";
+                       //다음글자에 next변수를 링크한다. 현재 4페이지에 있다면 +1하여 5페이지로 이동하게 된다.
                     }
+                   
+
                     if($page >= $totalPage){ //만약 page가 페이지수보다 크거나 같다면
                        //마지막 글자에 긁은 빨간색을 적용한다.
                     }else{
@@ -239,12 +248,17 @@
 
                 <div style="height:50px;"></div>
 
-                <div style="float: right; padding: 20px 100px 0px 100px;">
-                <caption>TOTAL 게시물 : <?php echo number_format($total_count) ?> 개</caption>
-                
-                
-                 
+                <div class="writeCount" style="float: right; padding: 20px 100px 0px 100px;">
+                    <ul>
+                        <li>
+                            <a href="./boardwrite.php" >[ Write ]</a>
+                        </li>
+                        <li>
+                            <caption >TOTAL 게시물 : <?php echo number_format($total_count) ?> 개</caption>
+                        </li>
+                    </ul>
                 </div>
+               
             
        
 

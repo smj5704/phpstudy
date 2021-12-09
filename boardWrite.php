@@ -42,6 +42,7 @@
 
      button:hover {
           opacity: 1;
+          font-size: 25px;
      }
      
 </style>
@@ -60,7 +61,7 @@
                     <form action="./boardInsert.php" method=post>
 
                               <div class="insert_title">
-                                   <textarea  style="border: 0.8px solid darkgray;" name="title" id="title" rows="1" cols="80" placeholder="제목을 입력하세요" maxlength="100" required></textarea>
+                                   <textarea  style="border: 0.8px solid darkgray; " name="title" id="title" rows="1" cols="80" placeholder="제목을 입력하세요" maxlength="100" required></textarea>
                               </div>
                               
                               <div id = "insert_idpw" >
