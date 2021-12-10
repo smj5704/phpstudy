@@ -151,8 +151,8 @@
             <div >
                     
                 <a href="./boardList.php">[ Go List ] &nbsp;&nbsp;&nbsp;</a>
-                <a href="./boardModify.php?idx=<?php echo $board['id']; ?>">[ Edit ] &nbsp;&nbsp;&nbsp;</a>
-                <a href="boardDelete.php?idx=<?php echo $board['id']; ?>">[ Delete ]</a>
+                <a href="./boardModifyForm.php?no=<?php echo $board['no']; ?>">[ Edit ] &nbsp;&nbsp;&nbsp;</a>
+                <a href="./boardDelete.php?no=<?php echo $board['no']; ?>">[ Delete ]</a>
                     
             </div>
         </div>
@@ -165,8 +165,9 @@
         
         <h4 style="text-align: center;">< Reply List ></h4>
             <?php
+                $rno = $row['rno'];
                
-                $sql3 = "select * from reply where board_no='".$bno."' order by id asc";
+                $sql3 = "select * from reply where board_no='".$bno."' AND parent='0' order by rno asc";
                 $result = mysqli_query($conn, $sql3);
 
                
@@ -178,82 +179,83 @@
                 
                     <tr>
                         <th width = "50">
-                            no<?= $row['no']?>
+                            no : <?= $row['rno']?>
                         </th>
                         <th width = "50">
-                           id : <?= $row['id']?>
+                           id : <?= $row['rid']?>
                         </th>
                         
                         <td width = "120">
-                           date : <?= $row['date'] ?>
+                           date : <?= $row['rdate'] ?>
                         </td>
                        
                     </tr>
                     <tr>
                         <td colspan = "3" style="height:100px;" >
-                            <?= $row['content'] ?>
+                            <?= $row['rcontent'] ?>
                         </td>
                     </tr>
-                    
-                
-                </table>
-                <!-- 대댓글 불러옹기 -->
-                <?php 
-                $rno = $row['no'];
-                
-                $sql3_r = "select * from reply where parent= (select min(no) from reply) order by id asc";
-               echo $sql3_r;exit;
-                // echo $sql3_r;exit;
-                $result_r = mysqli_query($conn, $sql3_r);
-
-                    for ($r=0; $row=mysqli_fetch_assoc($result_r);$r++) :
-                        ?>
-                <table class="dadat_view">
-                 <tr>
-                        <th width = "50">
-                            ===>
-                        </th>
-                        <th width = "50">
-                           id : <?= $row['id']?>
-                        </th>
-                        
-                        <td width = "120">
-                           date : <?= $row['date'] ?>
-                        </td>
-                       <td width = "50">
-                            <?= $row['no'] ?>
-                        </td>
-                        <td  width = "120">
-                            <?= $row['content'] ?>
-                        </td>
-                    </tr>
-
-                </table>
-                <?php 
-                    endfor;
-                    ?>
-                <!--대댓글 작성 란 -->
-                <div class = "rereply" style = "float:right; " > 
-                    <div style = "margin-bottom:10px;">
-                        <b > [ <?= $row['id'];?> 님의  답글 작성 ]</b>
-                    </div>
-
-                    <div id="noneDiv">
-                        <form  action="./replyProcess.php?bno=<? echo $bno; ?> && rno=<? echo $rno; ?>" method="post">
-                            <input type="text" name="id" id="id" class="id" size="15" placeholder="아이디를 입력하세요">
-                            <input type="password" name="pw" id="pw" class="pw" size="15" placeholder="비밀번호를 입력하세요">
+                   <tr>
+                  
+                   </tr>
+                    <tr>
+                        <td style = "border-bottom:none;">
+                        <form  action="./replyProcess.php?id=<?php echo $bno; ?> && rno=<? echo $rno; ?>" method="post">
+                            <input type="text" name="rid" id="rid" class="rid" size="15" placeholder="아이디를 입력하세요">
+                            <input type="password" name="rpw" id="rpw" class="rpw" size="15" placeholder="비밀번호를 입력하세요">
+                            <input type="hidden" name="parent" id="parent" pw="parent" value=<?=$row['rno']?>>
                             <div style="margin-top:10px; ">
-                                <textarea name="content" class="content" id="content" ></textarea>
+                                <textarea name="rcontent" class="rcontent" id="rcontent" ></textarea>
                             </div>
                             
                             <button >[ re ]</button>
-                            <a class="dat_edit_bt"> [ edit ] </a>
-                            <a class="dat_delete_bt"> [ delete ] </a>
                         </form>
-                    </div>
-                </div>
-           
+                        </td>
+                    </tr>
+                    <tr>
+                   
+                   
 
+                    </tr>
+                    <?php 
+                    endfor;
+                    ?>
+                    <table class="dadat_view">
+                    <?php 
+               
+               
+               $sql3_r = "select * from reply where parent = '".$parent."'   order by rid asc";
+                   
+               $result_r = mysqli_query($conn, $sql3_r);
+               for ($r=0; $row=mysqli_fetch_assoc($result_r);$r++) :
+               ?>
+
+                        <tr>
+                            <th width = "50">
+                                ===> 
+                            </th>
+                            <td width = "50">
+                                <?= $row['rno'] ?>번 댓글의 대댓글
+                            </td>
+                            <th width = "50">
+                            id : <?= $row['rid']?>
+                            </th>
+                            
+                            <td width = "120">
+                            date : <?= $row['rdate'] ?>
+                            </td>
+                        
+                            <td  width = "120">
+                                <?= $row['rcontent'] ?>
+                            </td>
+                        </tr>
+
+                </table>
+               
+                </table>
+                
+               
+               
             </div>
            
             <?php
@@ -264,10 +266,11 @@
             <div class="dap_ins">
                 <form action="./replyProcess.php?id=<?php echo $bno; ?>" method="post">
                 <h5>[ 댓글 작성 ]</h5>
-                    <input type="text" name="id" id="id" class="id" size="15" placeholder="아이디를 입력하세요">
-                    <input type="password" name="pw" id="pw" class="pw" size="15" placeholder="비밀번호를 입력하세요">
+                    <input type="text" name="rid" id="rid" class="rid" size="15" placeholder="아이디를 입력하세요">
+                    <input type="password" name="rpw" id="rpw" class="rpw" size="15" placeholder="비밀번호를 입력하세요">
+                    <input type="hidden" name="parent" id="parent" pw="parent" value="0">
                     <div style="margin-top:10px; ">
-                        <textarea name="content" class="content" id="content" ></textarea>
+                        <textarea name="rcontent" class="rcontent" id="rcontent" ></textarea>
                         <button style = "margin-top:10px;" id="rep_bt" >[reply write]</button>
                     </div>
                 </form>
