@@ -87,11 +87,6 @@
                             
                     </thead>
                     <!-- 페이징 처리 --> 
-                   
-                       
-                         
-                
-                         
                        
 <tfoot>
 
@@ -105,7 +100,7 @@
                         if(isset($_GET["page"])){
                             $page = $_GET["page"]; //현재페이지
                             $block = $_GET["block"]; //현재 블럭
-                            }else{
+                        }else{
                                 $page = 1; //게시판 처음 들어가면 1페이지
                                 $block = 1;
                             }
@@ -124,7 +119,8 @@
                         $sql = "select * from board order by no asc limit $startDataRow , 10";
                         //쿼리 실행
                         $result = mysqli_query($conn, $sql);
-                                        for($i=0; $row=mysqli_fetch_assoc($result); $i++):
+                        
+                        for($i=0; $row=mysqli_fetch_assoc($result); $i++):
                             
                             ?> 
                            
@@ -151,7 +147,7 @@
                             
                         
                            
-                            <?php endfor; ?>
+                        <?php endfor; ?>
                         </div>
                         
                       
@@ -175,7 +171,7 @@
 //현재 페이지 번호 받아옹기
     
 
-        $conn = mysqli_connect("localhost","root","alswn1227","test");
+           $conn = mysqli_connect("localhost","root","alswn1227","test");
            $sql_p="select *from board"; //전체 데이터 갯수 불러오기
            $result_p=mysqli_query($conn, $sql_p);
            $totalPage = ceil(mysqli_num_rows($result_p)/10);

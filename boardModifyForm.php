@@ -66,7 +66,7 @@
                     </tr>
                     <tr>
                         <td>
-                            작성자 : <?php echo $board['id'] ?>
+                            작성자 : <?= $board['id'] ?>
                         </td>
                     </tr>
 
