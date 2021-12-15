@@ -64,16 +64,21 @@ function initMap() {
             //로드뷰 없애기 
 			streetViewControl: false,
         });
-        
+         //지도 맵 searchbox 위치 지정
+   		map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
       
         //searchInput 검색창으로 받아온 값 넣기
+        //getElementById() : html요소 중  id 속성이 'searchInput'인 요소를 리턴
 		var input = document.getElementById('searchInput');
-   		// map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-
-		var autocomplete = new google.maps.places.Autocomplete(input);
+  
+        
+		var autocomplete = new google.maps.places.Autocomplete(input, options);
+        //바인딩. 입력한 값을 map 위치로 
 		autocomplete.bindTo('bounds', map);
 
         var infosear = new google.maps.info
+
+        //infowindow : 검색 시 나타나는 장소 리스트
 		var infowindow = new google.maps.InfoWindow();
 
 		var marker = new google.maps.Marker({
@@ -83,8 +88,7 @@ function initMap() {
 			draggable:false
    		 });
 
-
-        
+        //자동완성 선택시 이벤트 
 		autocomplete.addListener('place_changed', function() {
         infowindow.close();
         marker.setVisible(false);
@@ -93,7 +97,7 @@ function initMap() {
         //geometry(google maps platform참고)  : 장소의 기하학 관련 정보(location : 위도 / 경도 , viewport : 이 장소를 볼 때 지도에서 선호하는 뷰포트 정의)
         if (!place.geometry) {
             //없는 주소나 장소를 검색 시 . 장소 리스트에서 아무것도 클릭안하고 엔터를 눌렀을 때 뜨는 경고창
-            window.alert("맛집을 다시 검색해주세요 !");
+            window.alert(place.name + "을 찾을 수 없습니다.");
             return;
         }
         if (place.geometry.viewport) {
