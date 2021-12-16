@@ -20,7 +20,7 @@
 </ul> 
 
 <!-- google maps api / place api 사용.initMap함수를 통해 불러옴 -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBtcCxidqRgbdY6Ud6a_kUKfROnVSiPoKY&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBtcCxidqRgbdY6Ud6a_kUKfROnVSiPoKY&callback=initMap&region=KR"></script>
 <script>
 var map;
 var marker;
@@ -78,7 +78,7 @@ function initMap() {
 
         var infosear = new google.maps.info
 
-        //infowindow : 검색 시 나타나는 장소 리스트
+        //infowindow : 검색 장소 마커의 정보창
 		var infowindow = new google.maps.InfoWindow();
 
 		var marker = new google.maps.Marker({
@@ -117,12 +117,9 @@ function initMap() {
         marker.setVisible(true);
     
         var address = '';
-
-   
-
-
         //검색해서 지정한 곳 위치 설명란에 입력 될 주소
         if (place.address_components) {
+            //address 배열에 값 삽입
             address = [
                 (place.address_components[2] && place.address_components[2].short_name || ''),
 			  (place.address_components[1] && place.address_components[1].short_name || ''),
@@ -145,6 +142,35 @@ function initMap() {
         document.getElementById('location').innerHTML = place.formatted_address;
         document.getElementById('lat').innerHTML = place.geometry.location.lat();
         document.getElementById('lon').innerHTML = place.geometry.location.lng();
+
+        //드래그 이벤트 처리
+			google.maps.event.addListener(marker,'dragend',function(event)  {
+				infowindow.setMap(null);
+				var geocoder = new google.maps.Geocoder();
+
+				document.getElementById('lat').value = event.getPosition().lat();
+				document.getElementById('lng').value = event.getPosition().lng();
+				var latlng = event.getPosition();
+
+				geocoder.geocode({"latLng": latlng}, function(data, status) {
+						
+					if (status == google.maps.GeocoderStatus.OK) {
+
+						var add = data[1].formatted_address;
+						
+
+					 	// if (data[1].address_components[i].types[0] == "administrative_area_level_1") {
+						 		// document.getElementById('locationbox').value = ;
+								
+								 
+						 
+						 
+					}
+					var infowindowdrag = new google.maps.InfoWindow();
+					infowindowdrag.setContent(response.results[0].formatted_address);
+					infowindowdrag.open(map,marker);
+				});
+			});	
     });
 }
 </script>
