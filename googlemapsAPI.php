@@ -26,6 +26,7 @@ var map;
 var marker;
 var icon_stop = "/img/board/mat_stop.png";
 var icon_move = "/img/board/mat_move.png";
+var icon_flag = "/img/board/gps_flag.png";
 var c;
 var lat;
 var base_lat = 37.544337198618926;
@@ -85,7 +86,8 @@ function initMap() {
 			map: map,
 			anchorPoint: new google.maps.Point(0, -29),
             //지도를 움직여도 마커는 고정됨.
-			draggable:false
+			draggable:false,
+            icon: icon_flag
    		 });
 
         //자동완성 선택시 이벤트 
@@ -121,6 +123,7 @@ function initMap() {
         if (place.address_components) {
             //address 배열에 값 삽입
             address = [
+                (place.address_components[3] && place.address_components[3].short_name || ''),
                 (place.address_components[2] && place.address_components[2].short_name || ''),
 			  (place.address_components[1] && place.address_components[1].short_name || ''),
 			  (place.address_components[0] && place.address_components[0].short_name || '')
@@ -131,32 +134,68 @@ function initMap() {
         infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
         infowindow.open(map, marker);
 
-		for (var i = 0; i < place.address_components.length; i++) {
-            if(place.address_components[i].types[0] == 'postal_code'){
-                document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
-            }
-            if(place.address_components[i].types[0] == 'country'){
-                document.getElementById('country').innerHTML = place.address_components[i].long_name;
-            }
-        }
-        document.getElementById('location').innerHTML = place.formatted_address;
-        document.getElementById('lat').innerHTML = place.geometry.location.lat();
-        document.getElementById('lon').innerHTML = place.geometry.location.lng();
-
-        //드래그 이벤트 처리
-			google.maps.event.addListener(marker,'dragend',function(event)  {
-				infowindow.setMap(null);
-				var geocoder = new google.maps.Geocoder();
-
-				document.getElementById('lat').value = event.getPosition().lat();
-				document.getElementById('lng').value = event.getPosition().lng();
-				var latlng = event.getPosition();
-
-				geocoder.geocode({"latLng": latlng}, function(data, status) {
+        //드래그 이벤트
+				google.maps.event.addListener(marker,'dragend',function(event)  {
+					infowindow.close();
+					document.getElementById('lat').value = event.latLng.lat();
+					document.getElementById('lng').value = event.latLng.lng();
+					var lat = event.latLng.lat();
+					var lng = event.latLng.lng();
+					var geocoder = new google.maps.Geocoder();
+					// var infowindowdrag = new google.maps.InfoWindow();
+					// infowindowdrag.open(map,marker);
+					var point = new google.maps.LatLng( lat, lng);
 						
-					if (status == google.maps.GeocoderStatus.OK) {
+					if (geocoder) {
+						geocoder.geocode({ 'latLng': point }, function (results, status) {
+							if (status == google.maps.GeocoderStatus.OK) {
+								if (results[0]) {
+									infowindowdrag.setContent( '<strong>' + place.name + '</strong>' + '<br>' +  results[0].formatted_address);	
+									infowindowdrag.open(map,marker);
+								} else {
+									console.log('No results found');
+								}
+							} else {
+								console.log('Geocoder failed due to: ' + status);
+							}
+						});
+					}
+						
+				});			
+		
+			});
+		// })
+		// }
+		}
 
-						var add = data[1].formatted_address;
+
+
+		// for (var i = 0; i < place.address_components.length; i++) {
+        //     if(place.address_components[i].types[0] == 'postal_code'){
+        //         document.getElementById('postal_code').innerHTML = place.address_components[i].long_name;
+        //     }
+        //     if(place.address_components[i].types[0] == 'country'){
+        //         document.getElementById('country').innerHTML = place.address_components[i].long_name;
+        //     }
+        // }
+        // document.getElementById('location').innerHTML = place.formatted_address;
+        // document.getElementById('lat').innerHTML = place.geometry.location.lat();
+        // document.getElementById('lon').innerHTML = place.geometry.location.lng();
+
+        // //드래그 이벤트 처리
+		// 	google.maps.event.addListener(marker,'dragend',function(event)  {
+		// 		infowindow.setMap(null);
+		// 		var geocoder = new google.maps.Geocoder();
+
+		// 		document.getElementById('lat').value = event.getPosition().lat();
+		// 		document.getElementById('lng').value = event.getPosition().lng();
+		// 		var latlng = event.getPosition();
+
+		// 		geocoder.geocode({"latLng": latlng}, function(data, status) {
+						
+		// 			if (status == google.maps.GeocoderStatus.OK) {
+
+		// 				var add = data[1].formatted_address;
 						
 
 					 	// if (data[1].address_components[i].types[0] == "administrative_area_level_1") {
@@ -165,12 +204,12 @@ function initMap() {
 								 
 						 
 						 
-					}
-					var infowindowdrag = new google.maps.InfoWindow();
-					infowindowdrag.setContent(response.results[0].formatted_address);
-					infowindowdrag.open(map,marker);
-				});
-			});	
-    });
-}
+// 					}
+// 					var infowindowdrag = new google.maps.InfoWindow();
+// 					infowindowdrag.setContent(response.results[0].formatted_address);
+// 					infowindowdrag.open(map,marker);
+// 				});
+// 			});	
+//     });
+// }
 </script>
